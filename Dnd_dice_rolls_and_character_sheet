@@ -1,0 +1,635 @@
+import random
+
+from prompt_toolkit.validation import Validator, ValidationError
+from prompt_toolkit import prompt
+
+import sys
+
+def delete_multiple_lines(n=1):
+    
+    """Delete the last line in the STDOUT."""
+    for _ in range(n):
+        sys.stdout.write("\x1b[1A")  # cursor up one line
+        sys.stdout.write("\x1b[2K")  # delete the last line
+
+class FunctionyValidator(Validator):
+    def __init__(self, valfunc):
+        self.valfunc = valfunc
+        
+    def validate(self, document):
+        text = document.text
+        valresult = self.valfunc(text)
+        if valresult:
+            raise ValidationError(message=valresult)
+
+def numCheck1and30(x: str) -> str:
+    try:
+        numx = int(x)
+    except:
+        return "That's not a number."
+    
+    if 1 <= numx <= 30:
+        return ""
+    else:
+        return "Abilities must be between 1 and 30."
+    
+def numCheck(x: str) -> str:
+    try:
+        numx = int(x)
+    except:
+        return "That's not a number."
+
+def numCheck1and7(x: str) -> str:
+    try:
+        numx = int(x)
+    except:
+        return "That's not a number."
+    if 1 <= numx <= 7:
+        return ""
+    else:
+        return "Choices must be between 1 and 7."
+
+def numCheck1and4(x: str) -> str:
+    try:
+        numx = int(x)
+    except:
+        return "That's not a number."
+    if 1 <= numx <= 4:
+        return ""
+    else:
+        return "Choices must be between 1 and 4."    
+
+def numCheck1and10(x: str) -> str:
+    try:
+        numx = int(x)
+    except:
+        return "That's not a number."
+    if 1 <= numx <= 10:
+        return ""
+    else:
+        return "This program can only handle up to 10 rolls at a time"    
+
+def numCheck1and2(x: str) -> str:
+    try:
+        numx = int(x)
+    except:
+        return "That's not a number."
+    if 1 <= numx <= 2:
+        return ""
+    else:
+        return "Please only select 1 or 2"
+
+dFour = 0
+dSix = 0
+dEight = 0
+dTen = 0
+dTwelve = 0
+dTwenty = 0
+
+strn = 0
+dex = 0
+cons = 0
+intl = 0
+wis = 0
+chari = 0
+
+strnMod = -5
+dexMod = -5
+consMod = -5
+intlMod = -5
+wisMod = -5
+chariMod = -5
+
+charInfo = [0,0,0,0,0,0]
+
+quitMenu = False
+
+lineCount = 0
+
+modadd = 0
+
+def charInfoGet(): 
+    global lineCount
+    delete_multiple_lines(n=lineCount)
+    global strn
+    global dex
+    global cons
+    global intl
+    global wis
+    global chari
+
+    global strnMod
+    global dexMod
+    global consMod
+    global intlMod
+    global wisMod
+    global chariMod
+
+    strnMod = -5
+    dexMod = -5
+    consMod = -5
+    intlMod = -5
+    wisMod = -5
+    chariMod = -5
+
+    pageBreak()
+    print("Input stats below")
+    pageBreak()
+    strn =  int(prompt("Strength:      ", validator=FunctionyValidator(numCheck1and30)))
+    dex =   int(prompt("Dexterity:     ", validator=FunctionyValidator(numCheck1and30)))
+    cons =  int(prompt("Constitution:  ", validator=FunctionyValidator(numCheck1and30)))
+    intl =  int(prompt("Intelligence:  ", validator=FunctionyValidator(numCheck1and30)))
+    wis =   int(prompt("Wisdom:        ", validator=FunctionyValidator(numCheck1and30)))
+    chari = int(prompt("Charisma:      ", validator=FunctionyValidator(numCheck1and30)))
+    pageBreak()
+
+    saveCharInfoLocal()
+
+    lineCount = 11
+    input("Press enter to continue: ")
+
+def ranInfoGet(): 
+    global strn
+    global dex
+    global cons
+    global intl
+    global wis
+    global chari
+
+    global strnMod
+    global dexMod
+    global consMod
+    global intlMod
+    global wisMod
+    global chariMod
+
+    strnMod = -5
+    dexMod = -5
+    consMod = -5
+    intlMod = -5
+    wisMod = -5
+    chariMod = -5
+
+    strn = random.randint(1,30)
+    dex = random.randint(1,30)
+    cons = random.randint(1,30)
+    intl = random.randint(1,30)
+    wis = random.randint(1,30)
+    chari = random.randint(1,30)
+
+    saveCharInfoLocal()
+
+def saveCharInfoLocal():
+    global charInfo
+    charInfo[0] = strn
+    charInfo[1] = dex
+    charInfo[2] = cons
+    charInfo[3] = intl
+    charInfo[4] = wis
+    charInfo[5] = chari
+
+    setMods()
+
+def printCharInfo():
+    global lineCount
+    delete_multiple_lines(n=lineCount)
+    
+    pageBreak()
+    print("Character Info")
+    pageBreak()
+    print(f"Strength:     {charInfo[0]}")
+    print(f"Dexterity:    {charInfo[1]}")
+    print(f"Constitution: {charInfo[2]}")
+    print(f"Intelligence: {charInfo[3]}")
+    print(f"Wisdom:       {charInfo[4]}")
+    print(f"Charisma:     {charInfo[5]}")
+    pageBreak()
+
+    print(f"Strength Modifier:       {strnMod:+}")
+    print(f"Dexterity Modifier:      {dexMod:+}")
+    print(f"Constitution Modifier:   {consMod:+}")
+    print(f"Intelligence Modifier:   {intlMod:+}")
+    print(f"Wisdom Modifier:         {wisMod:+}")
+    print(f"Charisma Modifier:       {chariMod:+}")
+    
+    pageBreak()
+    input("Press enter to continue: ")
+    lineCount = 18
+
+def chooseDice():
+    quitRolls = False
+    while quitRolls == False:    
+        global lineCount
+        delete_multiple_lines(n=lineCount)
+
+        pageBreak()
+        print("Choose a dice to roll")
+        pageBreak()
+        print("d4:         [1]")
+        print("d6:         [2]")
+        print("d8:         [3]")
+        print("d10:        [4]")
+        print("d12:        [5]")
+        print("d20:        [6]")
+        print("Quit Rolls  [7]")
+        pageBreak()
+
+        diceChoice = 0
+
+        diceChoice = int(prompt("Your choice: ", validator=FunctionyValidator(numCheck1and7)))
+        pageBreak()
+
+        lineCount = 13
+
+        if diceChoice == 1: 
+            rollDFour()
+        if diceChoice == 2: 
+            rollDSix()
+        if diceChoice == 3: 
+            rollDEight()
+        if diceChoice == 4: 
+            rollDTen()
+        if diceChoice == 5: 
+            rollDTwelve()
+        if diceChoice == 6: 
+            rollDTwenty()
+        if diceChoice == 7:
+            quitRolls = True
+
+def rollDFour():
+    global lineCount
+    delete_multiple_lines(n=lineCount)    
+    
+    pageBreak()
+    print("How many D4s would you like to roll? ")
+    pageBreak()
+    lineCount = 3
+    
+    modRoll()
+    
+    delete_multiple_lines(n=lineCount)
+
+    rollNum = int(prompt("Number of rolls: ", validator=FunctionyValidator(numCheck1and10))) 
+    pageBreak()
+    print(f"All rolls have a {modadd:+} modifier")
+    pageBreak()
+
+    lineCount = 6 + rollNum
+    while rollNum > 0: 
+        rollOut = random.randint(1,4)
+        if rollOut >= 10 and ((rollOut + modadd) >= 10 or (rollOut + modadd) < 0) : 
+            print(f"| Base Roll:     '{rollOut}'  | Modified Roll:     '{rollOut + modadd}'  |")
+        elif (rollOut + modadd) >= 10 or (rollOut + modadd) < 0:
+            print(f"| Base Roll:     '{rollOut}'   | Modified Roll:     '{rollOut + modadd}'  |") 
+        elif rollOut >= 10:
+            print(f"| Base Roll:     '{rollOut}'  | Modified Roll:     '{rollOut + modadd}'   |")
+        else: 
+            print(f"| Base Roll:     '{rollOut}'   | Modified Roll:     '{rollOut + modadd}'   |")
+        rollNum -= 1
+    pageBreak()
+    input("Press enter to continue: ")
+
+def rollDSix() -> None:
+    global lineCount
+    delete_multiple_lines(n=lineCount)    
+    
+    pageBreak()
+    print("How many D6s would you like to roll? ")
+    pageBreak()
+    lineCount = 3
+    
+    modRoll()
+    
+    delete_multiple_lines(n=lineCount)
+
+    rollNum = int(prompt("Number of rolls: ", validator=FunctionyValidator(numCheck1and10))) 
+    pageBreak()
+    print(f"All rolls have a {modadd:+} modifier")
+    pageBreak()
+
+    lineCount = 6 + rollNum
+    while rollNum > 0: 
+        rollOut = random.randint(1,6)
+        if rollOut >= 10 and ((rollOut + modadd) >= 10 or (rollOut + modadd) < 0): 
+            print(f"| Base Roll:     '{rollOut}'  | Modified Roll:     '{rollOut + modadd}'  |")
+        elif (rollOut + modadd) >= 10 or (rollOut + modadd) < 0:
+            print(f"| Base Roll:     '{rollOut}'   | Modified Roll:     '{rollOut + modadd}'  |") 
+        elif rollOut >= 10:
+            print(f"| Base Roll:     '{rollOut}'  | Modified Roll:     '{rollOut + modadd}'   |")
+        else: 
+            print(f"| Base Roll:     '{rollOut}'   | Modified Roll:     '{rollOut + modadd}'   |")
+        rollNum -= 1
+    pageBreak()
+    input("Press enter to continue: ")
+
+def rollDEight():
+    global lineCount
+    delete_multiple_lines(n=lineCount)    
+    
+    pageBreak()
+    print("How many D8s would you like to roll? ")
+    pageBreak()
+    lineCount = 3
+    
+    modRoll()
+    
+    delete_multiple_lines(n=lineCount)
+
+    rollNum = int(prompt("Number of rolls: ", validator=FunctionyValidator(numCheck1and10))) 
+    pageBreak()
+    print(f"All rolls have a {modadd:+} modifier")
+    pageBreak()
+
+    lineCount = 6 + rollNum
+    while rollNum > 0: 
+        rollOut = random.randint(1,8)
+        if rollOut >= 10 and ((rollOut + modadd) >= 10 or (rollOut + modadd) < 0): 
+            print(f"| Base Roll:     '{rollOut}'  | Modified Roll:     '{rollOut + modadd}'  |")
+        elif (rollOut + modadd) >= 10 or (rollOut + modadd) < 0:
+            print(f"| Base Roll:     '{rollOut}'   | Modified Roll:     '{rollOut + modadd}'  |") 
+        elif rollOut >= 10:
+            print(f"| Base Roll:     '{rollOut}'  | Modified Roll:     '{rollOut + modadd}'   |")
+        else: 
+            print(f"| Base Roll:     '{rollOut}'   | Modified Roll:     '{rollOut + modadd}'   |")
+        rollNum -= 1
+    pageBreak()
+    input("Press enter to continue: ")
+
+def rollDTen():
+    global lineCount
+    delete_multiple_lines(n=lineCount)    
+    
+    pageBreak()
+    print("How many D10s would you like to roll? ")
+    pageBreak()
+    lineCount = 3
+    
+    modRoll()
+    
+    delete_multiple_lines(n=lineCount)
+
+    rollNum = int(prompt("Number of rolls: ", validator=FunctionyValidator(numCheck1and10))) 
+    pageBreak()
+    print(f"All rolls have a {modadd:+} modifier")
+    pageBreak()
+
+    lineCount = 6 + rollNum
+    while rollNum > 0: 
+        rollOut = random.randint(1,10)
+        if rollOut >= 10 and ((rollOut + modadd) >= 10 or (rollOut + modadd) < 0) : 
+            print(f"| Base Roll:     '{rollOut}'  | Modified Roll:     '{rollOut + modadd}'  |")
+        elif (rollOut + modadd) >= 10 or (rollOut + modadd) < 0:
+            print(f"| Base Roll:     '{rollOut}'   | Modified Roll:     '{rollOut + modadd}'  |") 
+        elif rollOut >= 10:
+            print(f"| Base Roll:     '{rollOut}'  | Modified Roll:     '{rollOut + modadd}'   |")
+        else: 
+            print(f"| Base Roll:     '{rollOut}'   | Modified Roll:     '{rollOut + modadd}'   |")
+        rollNum -= 1
+    pageBreak()
+    input("Press enter to continue: ")
+
+def rollDTwelve():
+    global lineCount
+    delete_multiple_lines(n=lineCount)    
+    
+    pageBreak()
+    print("How many D12s would you like to roll? ")
+    pageBreak()
+    lineCount = 3
+    
+    modRoll()
+    
+    delete_multiple_lines(n=lineCount)
+
+    rollNum = int(prompt("Number of rolls: ", validator=FunctionyValidator(numCheck1and10))) 
+    pageBreak()
+    print(f"All rolls have a {modadd:+} modifier")
+    pageBreak()
+
+    lineCount = 6 + rollNum
+    while rollNum > 0: 
+        rollOut = random.randint(1,12)
+        if rollOut >= 10 and ((rollOut + modadd) >= 10 or (rollOut + modadd) < 0): 
+            print(f"| Base Roll:     '{rollOut}'  | Modified Roll:     '{rollOut + modadd}'  |")
+        elif (rollOut + modadd) >= 10 or (rollOut + modadd) < 0:
+            print(f"| Base Roll:     '{rollOut}'   | Modified Roll:     '{rollOut + modadd}'  |") 
+        elif rollOut >= 10:
+            print(f"| Base Roll:     '{rollOut}'  | Modified Roll:     '{rollOut + modadd}'   |")
+        else: 
+            print(f"| Base Roll:     '{rollOut}'   | Modified Roll:     '{rollOut + modadd}'   |")
+        rollNum -= 1
+    pageBreak()
+    input("Press enter to continue: ")
+
+def rollDTwenty():
+    global lineCount
+    delete_multiple_lines(n=lineCount)    
+    
+    pageBreak()
+    print("How many D20s would you like to roll? ")
+    pageBreak()
+    lineCount = 3
+    
+    modRoll()
+    
+    delete_multiple_lines(n=lineCount)
+
+    rollNum = int(prompt("Number of rolls: ", validator=FunctionyValidator(numCheck1and10))) 
+    pageBreak()
+    print(f"All rolls have a {modadd:+} modifier")
+    pageBreak()
+
+    lineCount = 6 + rollNum
+    while rollNum > 0: 
+        rollOut = random.randint(1,20)
+        if rollOut >= 10 and ((rollOut + modadd) >= 10 or (rollOut + modadd) < 0) : 
+            print(f"| Base Roll:     '{rollOut}'  | Modified Roll:     '{rollOut + modadd}'  |")
+        elif (rollOut + modadd) >= 10 or (rollOut + modadd) < 0:
+            print(f"| Base Roll:     '{rollOut}'   | Modified Roll:     '{rollOut + modadd}'  |") 
+        elif rollOut >= 10:
+            print(f"| Base Roll:     '{rollOut}'  | Modified Roll:     '{rollOut + modadd}'   |")
+        else: 
+            print(f"| Base Roll:     '{rollOut}'   | Modified Roll:     '{rollOut + modadd}'   |")
+        rollNum -= 1
+    
+    pageBreak()
+    input("Press enter to continue: ")
+
+def menuStartup():
+    pageBreak() 
+    print("Welcome to a simple DnD character sheet and dice roller")
+    print("Below is the main menu, you can come back here to do the following")
+    pageBreak()
+
+def menuMain():
+    global lineCount
+    delete_multiple_lines(n=lineCount)
+    
+    pageBreak()
+    print("Menu Options")
+    pageBreak()
+    print("Set Character Stats        [1]")
+    print("View Character Stats       [2]")
+    print("Roll Dice                  [3]")
+    print("Quit                       [4]")
+    
+    pageBreak()
+    menuChoice = int(prompt("Please make a selection: ", validator=FunctionyValidator(numCheck1and4)))
+    pageBreak()
+    
+    lineCount = 10
+    
+    if menuChoice == 1: 
+        setStatChoice()
+    if menuChoice == 2:
+        printCharInfo()
+    if menuChoice == 3: 
+        chooseDice()
+    if menuChoice == 4: 
+        global quitMenu
+        quitMenu = True
+
+def pageBreak():
+    print("------------------------------------------------------------------")
+
+def setMods():
+    setStrn()
+    setDex()
+    setCons()
+    setIntl()
+    setWis()
+    setChari()
+
+def setStrn(): 
+    global strn
+    global strnMod
+    statTrack = strn
+
+    while statTrack > 0:
+        if (statTrack % 2) == 0: 
+            strnMod += 1
+        statTrack -= 1
+
+def setDex():
+    global dex
+    global dexMod
+    statTrack = dex
+
+    while statTrack > 0:
+        if (statTrack % 2) == 0: 
+            dexMod += 1
+        statTrack -= 1
+
+def setCons():
+    global cons
+    global consMod
+    statTrack = cons
+
+    while statTrack > 0:
+        if (statTrack % 2) == 0: 
+            consMod += 1
+        statTrack -= 1
+
+def setIntl():
+    global intl
+    global intlMod
+    statTrack = intl
+
+    while statTrack > 0:
+        if (statTrack % 2) == 0: 
+            intlMod += 1
+        statTrack -= 1
+
+def setWis():
+    global wis
+    global wisMod
+    statTrack = wis
+
+    while statTrack > 0:
+        if (statTrack % 2) == 0: 
+            wisMod += 1
+        statTrack -= 1
+
+def setChari():
+    global chari
+    global chariMod
+    statTrack = chari
+
+    while statTrack > 0:
+        if (statTrack % 2) == 0: 
+            chariMod += 1
+        statTrack -= 1
+
+def modRoll(): 
+    global lineCount
+    global modadd
+    delete_multiple_lines(n=lineCount)
+
+    print("What modifier applies to this roll")
+    print("Strenght:     [1]")
+    print("Dexterity:    [2]")
+    print("Constitution: [3]")
+    print("Intelligence: [4]")
+    print("Wisdom:       [5]")
+    print("Charisma:     [6]")
+    print("No Modifier:  [7]")
+    pageBreak()
+
+    print(f"Strength Modifier:       {strnMod:+}")
+    print(f"Dexterity Modifier:      {dexMod:+}")
+    print(f"Constitution Modifier:   {consMod:+}")
+    print(f"Intelligence Modifier:   {intlMod:+}")
+    print(f"Wisdom Modifier:         {wisMod:+}")
+    print(f"Charisma Modifier:       {chariMod:+}")
+    
+    pageBreak()
+    modNum = int(prompt("Modifier choice: ", validator=FunctionyValidator(numCheck1and7)))
+    
+    lineCount = 17
+
+    if modNum == 1: 
+        modadd = strnMod
+    if modNum == 2: 
+        modadd = dexMod
+    if modNum == 3:
+        modadd = consMod
+    if modNum == 4:
+        modadd = intlMod
+    if modNum == 5:
+        modadd = wisMod
+    if modNum == 6:
+        modadd = chariMod
+    if modNum == 7: 
+        modadd = 0
+
+def setStatChoice(): 
+    global lineCount
+    delete_multiple_lines(n=lineCount)
+
+    print("Would you like to manually or randomly set your character stats? ")
+    pageBreak()
+    print("Manual stat allocation: [1]")
+    print("Random stat allocation: [2]")
+    pageBreak()
+    
+    alloChoice = int(prompt("Please Choose: ", validator=FunctionyValidator(numCheck1and2)))
+
+    lineCount = 6
+
+    if alloChoice == 1: 
+        charInfoGet()
+    if alloChoice == 2: 
+        ranInfoGet()
+
+
+menuStartup()
+
+while quitMenu == False: 
+    menuMain()
+
+if quitMenu == True: 
+    lineCount = lineCount + 4
+    delete_multiple_lines(n=lineCount)
+    pageBreak()
+    print("Goodbye! ")
+    pageBreak()
