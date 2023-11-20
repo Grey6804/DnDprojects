@@ -1,9 +1,13 @@
+## imports some of the premade functions needed for the program 
+
 import random
 
 from prompt_toolkit.validation import Validator, ValidationError
 from prompt_toolkit import prompt
 
 import sys
+
+## delete multiple lines function
 
 def delete_multiple_lines(n=1):
     
@@ -21,6 +25,8 @@ class FunctionyValidator(Validator):
         valresult = self.valfunc(text)
         if valresult:
             raise ValidationError(message=valresult)
+
+## Number validations
 
 def numCheck1and30(x: str) -> str:
     try:
@@ -79,6 +85,8 @@ def numCheck1and2(x: str) -> str:
     else:
         return "Please only select 1 or 2"
 
+## Defines some of the variables used throughout the program 
+
 dFour = 0
 dSix = 0
 dEight = 0
@@ -107,6 +115,8 @@ quitMenu = False
 lineCount = 0
 
 modadd = 0
+
+## initial input for character information
 
 def charInfoGet(): 
     global lineCount
@@ -148,6 +158,8 @@ def charInfoGet():
     lineCount = 11
     input("Press enter to continue: ")
 
+## function to set character information randomly
+
 def ranInfoGet(): 
     global strn
     global dex
@@ -179,6 +191,8 @@ def ranInfoGet():
 
     saveCharInfoLocal()
 
+## saves character information to the program
+
 def saveCharInfoLocal():
     global charInfo
     charInfo[0] = strn
@@ -189,6 +203,8 @@ def saveCharInfoLocal():
     charInfo[5] = chari
 
     setMods()
+
+## Function to show the character information
 
 def printCharInfo():
     global lineCount
@@ -215,6 +231,8 @@ def printCharInfo():
     pageBreak()
     input("Press enter to continue: ")
     lineCount = 18
+
+## initial dice selection menu
 
 def chooseDice():
     quitRolls = False
@@ -255,6 +273,8 @@ def chooseDice():
             rollDTwenty()
         if diceChoice == 7:
             quitRolls = True
+
+## all of the dice rolling 
 
 def rollDFour():
     global lineCount
@@ -455,11 +475,15 @@ def rollDTwenty():
     pageBreak()
     input("Press enter to continue: ")
 
+## Initial start for program
+
 def menuStartup():
     pageBreak() 
     print("Welcome to a simple DnD character sheet and dice roller")
     print("Below is the main menu, you can come back here to do the following")
     pageBreak()
+
+## Main selection screen
 
 def menuMain():
     global lineCount
@@ -489,8 +513,12 @@ def menuMain():
         global quitMenu
         quitMenu = True
 
+## Just a vanity thing
+
 def pageBreak():
     print("------------------------------------------------------------------")
+
+## Calcuations for modifiers
 
 def setMods():
     setStrn()
@@ -560,13 +588,15 @@ def setChari():
             chariMod += 1
         statTrack -= 1
 
+## This is prompted after a dice is chosen, will now apply the modifier to the roll
+
 def modRoll(): 
     global lineCount
     global modadd
     delete_multiple_lines(n=lineCount)
 
     print("What modifier applies to this roll")
-    print("Strenght:     [1]")
+    print("Strength:     [1]")
     print("Dexterity:    [2]")
     print("Constitution: [3]")
     print("Intelligence: [4]")
@@ -602,6 +632,8 @@ def modRoll():
     if modNum == 7: 
         modadd = 0
 
+## Prompt to either manually or randomly set character stats
+
 def setStatChoice(): 
     global lineCount
     delete_multiple_lines(n=lineCount)
@@ -621,6 +653,8 @@ def setStatChoice():
     if alloChoice == 2: 
         ranInfoGet()
 
+
+## The actual program
 
 menuStartup()
 
